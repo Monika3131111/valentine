@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>❤️ Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0b0000 10%, #3b0000 60%);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffb6b6;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(180, 20, 20, 0.12);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(139, 0, 0, 0.35);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #ff4c4c;
+    }
+
+    button {
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.2s ease;
+    }
+
+    #yesBtn {
+      background: linear-gradient(180deg,#8b0000,#b30000);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(179, 0, 0, 0.35);
+    }
+
+    #noBtn {
+      background: transparent;
+      border: 2px solid rgba(200, 20, 20, 0.9);
+      color: #ff9b9b;
+      position: absolute;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: #ffc9c9;
+    }
+
+    .days {
+      font-size: 28px;
+      margin: 15px 0;
+      font-weight: 700;
+      color: #ff6b6b;
+    }
+
+    /* Hearts animation container */
+    #heartsContainer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 40;
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff1a1a;
+      font-size: 18px;
+      will-change: transform, opacity;
+      opacity: 0;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      transform: translateY(0) translateX(0) scale(0.95);
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      animation-iteration-count: 1;
+      animation-fill-mode: none;
+      --drift: 0px; /* set by JS */
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) scale(0.95);
+        opacity: 0;
+      }
+      5% {
+        opacity: 0.95;
+      }
+      100% {
+        transform: translateY(-140vh) translateX(var(--drift)) scale(0.7);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="questionCard">
+    <h1>Hamlet — will you be my Valentine? ❤️</h1>
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No 🙃</button>
+  </div>
+
+  <div class="card hidden" id="loveCard">
+    <h1>❤️</h1>
+    <div class="days" id="daysTogether"></div>
+    <div class="message" id="loveMessage"></div>
+    <div class="message" id="heartsNote"></div>
+  </div>
+
+  <div id="heartsContainer" aria-hidden="true"></div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const questionCard = document.getElementById("questionCard");
+    const loveCard = document.getElementById("loveCard");
+    const daysTogether = document.getElementById("daysTogether");
+    const loveMessage = document.getElementById("loveMessage");
+    const heartsNote = document.getElementById("heartsNote");
+    const heartsContainer = document.getElementById("heartsContainer");
+
+    
+
+    noBtn.addEventListener("mouseenter", () => {
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 50);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+    yesBtn.addEventListener("click", () => {
+      questionCard.classList.add("hidden");
+      loveCard.classList.remove("hidden");
+
+      // fixed days as requested
+      const days = 884;
+      daysTogether.innerHTML = `We’ve been together for <br> ${days} days ❤️`;
+
+      const text =
+        "Hamlet, I’m grateful that you are in my life.\n" +
+        "Every single day with you matters.\n" +
+        "I love you endlessly.";
+
+      // typed message
+      let i = 0;
+      function typeText() {
+        if (i < text.length) {
+          loveMessage.innerHTML += text[i] === "\n" ? "<br>" : text[i];
+          i++;
+          setTimeout(typeText, 30);
+        } else {
+          // typing finished
+        }
+      }
+
+      typeText();
+
+      // show note about hearts
+      heartsNote.innerHTML = `Displayed ${days} hearts for Hamlet.`;
+
+      // spawn hearts one-by-one for a continuous flowing effect
+      const total = 884;
+      let created = 0;
+      const spawnInterval = 28; // ms between hearts (tweak for density)
+
+      function createHeart() {
+        const span = document.createElement("span");
+        span.className = "heart";
+        span.innerText = "❤️";
+
+        // randomize position and size
+        const size = 12 + Math.random() * 28; // 12px - 40px
+        span.style.fontSize = size + "px";
+        span.style.left = Math.random() * 100 + "%";
+        // start slightly below the visible area so hearts flow in smoothly
+        span.style.top = (105 + Math.random() * 12) + "%"; // 105% - 117%
+
+        // drift and timing controlled via CSS variables for smooth motion
+        const drift = (Math.random() * 160 - 80).toFixed(2) + "px"; // -80px .. 80px
+        const duration = 4500 + Math.random() * 9000; // 4.5s - 13.5s
+        span.style.setProperty('--drift', drift);
+        span.style.animationDuration = duration + 'ms';
+
+        heartsContainer.appendChild(span);
+
+        // remove after animation to keep DOM clean
+        setTimeout(() => span.remove(), duration + 1200);
+      }
+
+      const timer = setInterval(() => {
+        if (created >= total) {
+          clearInterval(timer);
+          return;
+        }
+        createHeart();
+        created++;
+      }, spawnInterval);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,7 +1,8 @@
-`<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>❤️ Valentine?</title>
   <style>
     body {
@@ -110,6 +111,48 @@
       100% {
         transform: translateY(-140vh) translateX(var(--drift)) scale(0.7);
         opacity: 0;
+      }
+    }
+    /* Mobile-specific adjustments for readability and tappable targets */
+    @media (max-width: 600px) {
+      body {
+        overflow: auto;
+        -webkit-font-smoothing:antialiased;
+      }
+
+      .card {
+        padding: 28px;
+        border-radius: 16px;
+        max-width: 92vw;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 14px;
+      }
+
+      button {
+        padding: 16px 20px;
+        font-size: 18px;
+        border-radius: 22px;
+        min-width: 120px;
+      }
+
+      #noBtn {
+        position: absolute;
+      }
+
+      .message {
+        font-size: 18px;
+      }
+
+      .days {
+        font-size: 34px;
+      }
+
+      /* Make hearts larger and more visible on mobile */
+      .heart {
+        font-size: 22px;
       }
     }
   </style>

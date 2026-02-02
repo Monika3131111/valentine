@@ -53,6 +53,8 @@
       border: 2px solid rgba(200, 20, 20, 0.9);
       color: #ff9b9b;
       position: absolute;
+      transition: left 0.28s cubic-bezier(.2,.9,.2,1), top 0.28s cubic-bezier(.2,.9,.2,1);
+      -webkit-tap-highlight-color: transparent;
     }
 
     .hidden {
@@ -186,12 +188,49 @@
 
     
 
-    noBtn.addEventListener("mouseenter", () => {
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 50);
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    });
+    // Smooth, consistent "escape" behavior for the No button across devices
+    (function setupNoButtonEscape() {
+      let lastTouchTime = 0;
+
+      function moveNoBtn() {
+        const rect = noBtn.getBoundingClientRect();
+        const btnW = rect.width || 80;
+        const btnH = rect.height || 40;
+
+        const padding = 8; // keep some space from edges
+        const maxX = Math.max(window.innerWidth - btnW - padding, padding);
+        const maxY = Math.max(window.innerHeight - btnH - padding, padding);
+
+        const x = Math.random() * (maxX - padding) + padding;
+        const y = Math.random() * (maxY - padding) + padding;
+
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+      }
+
+      // For mouse pointer enter (desktop)
+      noBtn.addEventListener('mouseenter', moveNoBtn);
+
+      // For pointer events (covers many devices)
+      noBtn.addEventListener('pointerenter', (e) => {
+        // ignore pointerenter right after a touchend to avoid double-trigger
+        if (Date.now() - lastTouchTime > 50) moveNoBtn();
+      });
+
+      // For touch devices: move immediately on touchstart and prevent the subsequent click
+      noBtn.addEventListener('touchstart', (e) => {
+        lastTouchTime = Date.now();
+        e.preventDefault();
+        moveNoBtn();
+      }, {passive: false});
+
+      // As a fallback, also move on click (if user manages to click)
+      noBtn.addEventListener('click', (e) => {
+        // ignore click events triggered immediately after a touch
+        if (Date.now() - lastTouchTime < 500) return e.preventDefault();
+        moveNoBtn();
+      });
+    })();
 
     yesBtn.addEventListener("click", () => {
       questionCard.classList.add("hidden");

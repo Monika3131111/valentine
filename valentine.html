@@ -75,6 +75,25 @@
       opacity: 0.95;
     }
 
+    /* Distinct styling for the hearts note shown after clicking Yes */
+    #heartsNote {
+      margin-top: 12px;
+      font-size: 20px;
+      color: #ffecec;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      background: rgba(179, 0, 0, 0.06);
+      padding: 8px 12px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    #heartsNote .hearts-count {
+      color: #ff6b6b;
+      font-size: 22px;
+      margin: 0 6px;
+    }
+
     .days {
       font-size: 28px;
       margin: 15px 0;
@@ -176,7 +195,7 @@
   </div>
 
   <div class="card hidden" id="loveCard">
-    <h1>❤️</h1>
+    <!-- removed the big heart header per request; floating hearts remain -->
     <div class="days" id="daysTogether"></div>
     <div class="message" id="loveMessage"></div>
     <div class="message" id="heartsNote"></div>
@@ -274,8 +293,8 @@
 
       typeText();
 
-      // show note about hearts
-      heartsNote.innerHTML = `Displayed ${days} hearts for Hamlet.`;
+      // show note about hearts (wrap the numeric count for distinct styling)
+      heartsNote.innerHTML = `Displayed <span class="hearts-count">${days}</span> hearts for Hamlet.`;
 
       // spawn hearts one-by-one for a continuous flowing effect
       const total = 884;

@@ -46,28 +46,14 @@
       background: linear-gradient(180deg,#8b0000,#b30000);
       color: #fff;
       box-shadow: 0 8px 20px rgba(179, 0, 0, 0.35);
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    /* container for centered buttons */
-    .btnRow {
-      position: relative;
-      width: 100%;
-      height: 64px;
-      display: block;
-      margin: 0 auto 8px auto;
     }
 
     #noBtn {
       background: transparent;
       border: 2px solid rgba(200, 20, 20, 0.9);
       color: #ff9b9b;
-      position: absolute; /* positioned inside .btnRow */
-      top: 50%;
-      transform: translateY(-50%);
-      transition: transform 0.28s cubic-bezier(.2,.9,.2,1), left 0.28s cubic-bezier(.2,.9,.2,1), top 0.28s cubic-bezier(.2,.9,.2,1);
+      position: absolute;
+      transition: left 0.28s cubic-bezier(.2,.9,.2,1), top 0.28s cubic-bezier(.2,.9,.2,1);
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -161,16 +147,8 @@
         min-width: 120px;
       }
 
-      .btnRow {
-        height: 72px;
-      }
-
-      #yesBtn {
-        left: calc(50% - 90px);
-      }
-
       #noBtn {
-        left: calc(50% + 10px);
+        position: absolute;
       }
 
       .message {
@@ -192,10 +170,8 @@
 
   <div class="card" id="questionCard">
     <h1>Hamlet — will you be my Valentine? ❤️</h1>
-    <div class="btnRow">
-      <button id="yesBtn">Yes ❤️</button>
-      <button id="noBtn">No 🙃</button>
-    </div>
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No 🙃</button>
     <p class="ps-note">P.S. Try clicking 'No' first 😇</p>
   </div>
 
@@ -225,16 +201,13 @@
       let lastTouchTime = 0;
 
       function moveNoBtn() {
-        // position inside the button container to keep symmetry
-        const container = noBtn.offsetParent || document.body;
-        const rect = container.getBoundingClientRect();
-        const btnRect = noBtn.getBoundingClientRect();
-        const btnW = btnRect.width || 80;
-        const btnH = btnRect.height || 40;
+        const rect = noBtn.getBoundingClientRect();
+        const btnW = rect.width || 80;
+        const btnH = rect.height || 40;
 
         const padding = 8; // keep some space from edges
-        const maxX = Math.max(rect.width - btnW - padding, padding);
-        const maxY = Math.max(rect.height - btnH - padding, padding);
+        const maxX = Math.max(window.innerWidth - btnW - padding, padding);
+        const maxY = Math.max(window.innerHeight - btnH - padding, padding);
 
         const x = Math.random() * (maxX - padding) + padding;
         const y = Math.random() * (maxY - padding) + padding;
